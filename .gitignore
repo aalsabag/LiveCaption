@@ -131,3 +131,10 @@ dmypy.json
 # Models
 model
 vosk-model-small-en-us-0.15.zip
+
+# Secrets
+secrets.yaml
+
+########## React ############
+node_modules
+live-caption/node_modules
