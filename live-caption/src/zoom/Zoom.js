@@ -16,6 +16,22 @@ function joinMeeting  (signature, meetConfig) {
 
         success: (success) => {
           console.log(success);
+          ZoomMtg.getAttendeeslist({
+            success: (success) => {
+              console.log("Attendees")
+              console.log(success.result.attendeesList)
+            }
+          })
+          ZoomMtg.record({
+            success: (success) => {
+              console.log("recording success")
+              console.log(success)
+            },
+            error: (error) => {
+              console.log("failed to record")
+              console.log(error)
+            }
+          })
         },
 
         error: (error) => {
@@ -29,17 +45,10 @@ function joinMeeting  (signature, meetConfig) {
 function Zoom ({meetConfig}) {
 
   useEffect(() => {
-      // setZoomJSLib version 1.8.1 caused breaking, must be same as installed package verision
-      // installing this of version 1.7.x caused breaking
       ZoomMtg.setZoomJSLib("https://source.zoom.us/1.8.1/lib", "/av");
       ZoomMtg.preLoadWasm();
       ZoomMtg.prepareJssdk();
-  
-      /**
-       * You should not visible api secret key on frontend
-       * Signature must be generated on server
-       * https://marketplace.zoom.us/docs/sdk/native-sdks/web/essential/signature
-       */
+
       ZoomMtg.generateSignature({
         meetingNumber: meetConfig.meetingNumber,
         apiKey: meetConfig.apiKey,
