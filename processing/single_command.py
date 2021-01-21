@@ -13,7 +13,7 @@ if not os.path.exists("model"):
     print ("Please download the model from https://alphacephei.com/vosk/models and unpack as 'model' in the current folder.")
     exit (1)
 
-sample_rate=64000
+sample_rate=16000
 model = Model("model")
 rec = KaldiRecognizer(model, sample_rate)
 
@@ -34,7 +34,7 @@ rec = KaldiRecognizer(model, sample_rate)
 
 process = subprocess.Popen([ 'ffmpeg','-f','flv','-listen','1','-i','rtmp://localhost:1935/live/123456','-acodec', 'pcm_s16le', '-f','s16le', '-ac', '1', '-ar', str(sample_rate), '-'], stdout=subprocess.PIPE)
 while True:
-    data = process.stdout.read(int(sample_rate/4))
+    data = process.stdout.read(4000)
     if len(data) == 0:
         print("nothing to see here")
         break

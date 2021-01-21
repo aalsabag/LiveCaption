@@ -1,24 +1,21 @@
 #!/usr/bin/env python3
 
 from vosk import Model, KaldiRecognizer, SetLogLevel
-import sys
 import os
-import wave
 import subprocess
-import argparse
 import time
+import requests
+import json
 from flask import Flask, request
-import asyncio
+import threading
 app = Flask(__name__)
 
 SetLogLevel(0)
 #ffmpeg -f flv -listen 1 -i rtmp://localhost:1935/live/app -c copy -f flv -listen 1 rtmp://localhost:1936/live/app
 
-
 sample_rate=16000
 model = Model("model")
 rec = KaldiRecognizer(model, sample_rate)
-loop = asyncio.new_event_loop()
 
 if not os.path.exists("model"):
     print ("Please download the model from https://alphacephei.com/vosk/models and unpack as 'model' in the current folder.")
@@ -31,7 +28,7 @@ def login():
 
 @app.route('/process', methods=['POST'])
 def process():
-    caption_key = request.form['caption_key']
+    api_token = request.form['api_token']
     meeting_id = request.form['meeting_id']
     if not verify_meeting(meeting_id):
         return 500
@@ -39,33 +36,41 @@ def process():
 
     ending_time = time.time() + (60 * meeting_length * 60) # 60 seconds times n hours times 60 minutes 
     receive_endpoint = "rtmp://localhost:1935/live/{0}".format(meeting_id)
-    output_endpoint =  "rtmp://localhost:1936/live/{0}".format(meeting_id)
 
-    start_call = "ffmpeg -f flv -listen 1 -i {0} -c copy -f flv -listen 1 {1} &".format(receive_endpoint, output_endpoint)
-    os.system(start_call)
-    os.system('sleep 10')
+    process = subprocess.Popen([ 'ffmpeg','-f','flv','-listen','1','-i', receive_endpoint,'-acodec', 'pcm_s16le', '-f','s16le', '-ac', '1', '-ar', str(sample_rate), '-'], stdout=subprocess.PIPE)
 
-    process = subprocess.Popen(['ffmpeg', '-loglevel', 'quiet', '-i',
-                               output_endpoint,
-                                '-ar', str(sample_rate) , '-ac', '1', '-f', 's16le', '-'],
-                                stdout=subprocess.PIPE)
-
-    result = loop.create_task(process_stream(process, ending_time))
-    return "hi"
+    processing_thread = threading.Thread(target=process_stream, name="Downloader", args=[process, ending_time, api_token])
+    processing_thread.start()
+    return "Initiating Processor"
     #print(rec.FinalResult())    
 
 
-async def process_stream(process, ending_time):
-    os.system("sleep 5")
-    print("testing")
+def process_stream(process, ending_time, api_token):
+    seq = 3
+    print(api_token)
+    print("in function!!")
+    send_caption("NOW STARTING LIVE CAPTIONING SERVICE https://github.com/aalsabag/LiveCaption", api_token, seq, "en-US")
     while time.time() < ending_time:
         print("in loop")
-        data = process.stdout.read(4000)
+        data = process.stdout.read(int(sample_rate/4))
         if len(data) == 0:
             continue
         if rec.AcceptWaveform(data):
-            print(rec.Result())
-    return "hello"
+            res = json.loads(rec.Result())
+            print(res['text'])
+            send_caption(res['text'], api_token, seq, "en-US")
+            seq = seq + 1
+
+def send_caption(caption_string, api_token, seq, language):
+    
+    # url = "https://wmcc.zoom.us/closedcaption?id=89888325091&ns=QWhtZWQgQWxzYWJhZydzIFpvb20gTWVldGluZw&expire=86400&sparams=id%2Cns%2Cexpire&signature=ERaP06oLJrDZ17ZqUYh-gMZ42BWWJbkHLgiQa91Dbn0.AG._6Hj1896SpaP-fgqIyiUQ9tEP0AP7D_yYaa-MoIEJTtSHFHCzzmIudK2TtJtvPfYBiWDmr5KflSKcTB2i-7Ptft-BA5nbtd0iD8vf_WVvixjVpG53JZK.Q_HKB5JprjvdI7IZWrSz4w.7OGeAndgnfYgGanm&seq=9&lang=en-US"
+
+    headers = {
+    'Content-Type': 'text/plain'
+    }
+    response = requests.request("POST", api_token, headers=headers, data=caption_string, params={'seq': seq, 'lang': language})
+
+    print(response.text)
 
 def verify_meeting(meeting_id):
     return True
