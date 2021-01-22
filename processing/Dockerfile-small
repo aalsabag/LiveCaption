@@ -1,0 +1,19 @@
+FROM alphacep/kaldi-vosk-server:latest
+
+ENV MODEL_VERSION 0.15
+RUN mkdir /opt/vosk-model-en \
+   && cd /opt/vosk-model-en \
+   && wget -q http://alphacephei.com/vosk/models/vosk-model-small-en-us-${MODEL_VERSION}.zip \
+   && unzip vosk-model-small-en-us-${MODEL_VERSION}.zip \
+   && mv vosk-model-small-en-us-${MODEL_VERSION} model \
+   && rm -rf vosk-model-small-en-us-${MODEL_VERSION}.zip \
+   && apt update \
+   && apt install ffmpeg -y
+
+WORKDIR /opt/vosk-model-en
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
+
+COPY ffmpeg.py ffmpeg.py
+
+CMD ["python3", "ffmpeg.py"]

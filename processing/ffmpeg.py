@@ -51,7 +51,6 @@ def process_stream(process, ending_time, api_token):
     print("in function!!")
     send_caption("NOW STARTING LIVE CAPTIONING SERVICE https://github.com/aalsabag/LiveCaption", api_token, seq, "en-US")
     while time.time() < ending_time:
-        print("in loop")
         data = process.stdout.read(int(sample_rate/4))
         if len(data) == 0:
             continue
@@ -62,9 +61,7 @@ def process_stream(process, ending_time, api_token):
             seq = seq + 1
 
 def send_caption(caption_string, api_token, seq, language):
-    
     # url = "https://wmcc.zoom.us/closedcaption?id=89888325091&ns=QWhtZWQgQWxzYWJhZydzIFpvb20gTWVldGluZw&expire=86400&sparams=id%2Cns%2Cexpire&signature=ERaP06oLJrDZ17ZqUYh-gMZ42BWWJbkHLgiQa91Dbn0.AG._6Hj1896SpaP-fgqIyiUQ9tEP0AP7D_yYaa-MoIEJTtSHFHCzzmIudK2TtJtvPfYBiWDmr5KflSKcTB2i-7Ptft-BA5nbtd0iD8vf_WVvixjVpG53JZK.Q_HKB5JprjvdI7IZWrSz4w.7OGeAndgnfYgGanm&seq=9&lang=en-US"
-
     headers = {
     'Content-Type': 'text/plain'
     }
