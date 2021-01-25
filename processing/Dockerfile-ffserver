@@ -1,0 +1,14 @@
+FROM alpine:3.8
+
+# replace sha with https://github.com/{username}/{projectname}/archive/{sha}.zip
+RUN apk add gcc musl-dev pcre pcre-dev openssl openssl-dev make && \
+    mkdir rtmp-module && \
+    wget https://github.com/arut/nginx-rtmp-module/archive/master.zip && \
+    unzip master.zip
+    
+RUN wget https://nginx.org/download/nginx-1.19.0.tar.gz && \
+    tar zxf nginx-1.19.0.tar.gz && \
+    cd nginx-1.19.0 && \
+    ./configure --add-module=/nginx-rtmp-module-master && \
+    make && \
+    make install
