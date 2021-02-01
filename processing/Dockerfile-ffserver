@@ -20,7 +20,7 @@ RUN pip3 install -r requirements.txt
 
 #############ubuntu############
 #RUN apt-get update && \
-#    apt-get install gcc musl-dev make ffmpeg openssl libssl-dev wget unzip libpcre3 libpcre3-dev -y && \
+#    apt-get install gcc zlib1g-dev musl-dev make ffmpeg openssl libssl-dev wget unzip libpcre3 libpcre3-dev -y && \
 #    wget https://github.com/arut/nginx-rtmp-module/archive/afd350e0d8b7820d7d2cfc3fa748217153265ce6.zip
 #    unzip  afd350e0d8b7820d7d2cfc3fa748217153265ce6.zip
 #
