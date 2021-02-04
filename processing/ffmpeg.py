@@ -14,11 +14,11 @@ SetLogLevel(0)
 #ffmpeg -f flv -listen 1 -i rtmp://localhost:1935/live/app -c copy -f flv -listen 1 rtmp://localhost:1936/live/app
 
 sample_rate=16000
-model = Model("model")
+model = Model("/models/english")
 rec = KaldiRecognizer(model, sample_rate)
 
-if not os.path.exists("model"):
-    print ("Please download the model from https://alphacephei.com/vosk/models and unpack as 'model' in the current folder.")
+if not os.path.exists("/models/english"):
+    print ("Please download the model from https://alphacephei.com/vosk/models and unpack as '/models/english'")
     exit (1)
 
 
@@ -37,21 +37,26 @@ def process():
     ending_time = time.time() + (60 * meeting_length * 60) # 60 seconds times n hours times 60 minutes 
     receive_endpoint = "rtmp://localhost:1935/live/{0}".format(meeting_id)
 
-    process = subprocess.Popen([ 'ffmpeg','-f','flv','-listen','1','-i', receive_endpoint,'-acodec', 'pcm_s16le', '-f','s16le', '-ac', '1', '-ar', str(sample_rate), '-'], stdout=subprocess.PIPE)
+    #process = subprocess.Popen([ 'ffmpeg','-f','flv','-listen','1','-i', receive_endpoint,'-acodec', 'pcm_s16le', '-f','s16le', '-ac', '1', '-ar', str(sample_rate), '-'], stdout=subprocess.PIPE)
 
-    processing_thread = threading.Thread(target=process_stream, name="Downloader", args=[process, ending_time, api_token])
+    processing_thread = threading.Thread(target=process_stream, name="Downloader", args=[meeting_id, ending_time, api_token])
     processing_thread.start()
     return "Initiating Processor"
     #print(rec.FinalResult())    
 
 
-def process_stream(process, ending_time, api_token):
+def process_stream(meeting_id, ending_time, api_token):
     seq = 3
     print(api_token)
     print("in function!!")
     send_caption("NOW STARTING LIVE CAPTIONING SERVICE https://github.com/aalsabag/LiveCaption", api_token, seq, "en-US")
+    f = open('/mnt/streaming-{0}'.format(meeting_id,'rb'))
+    currentByteSize = os.path.getsize('/mnt/streaming-{0}'.format(meeting_id))
+    f.read(currentByteSize-4000)
+
     while time.time() < ending_time:
-        data = process.stdout.read(int(sample_rate/4))
+        #data = process.stdout.read(int(sample_rate/4))
+        data = f.read(4000)
         if len(data) == 0:
             continue
         if rec.AcceptWaveform(data):
