@@ -13,7 +13,10 @@ RUN wget https://nginx.org/download/nginx-1.19.0.tar.gz && \
     make && \
     make install
 COPY nginx.conf /usr/local/nginx/conf/
-COPY . .
+COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
-#ENTRYPOINT ["/usr/local/nginx/sbin/nginx;", "python3", "ffmpeg.py"]
+COPY entrypoint.sh entrypoint.sh
+
+COPY ffmpeg.py ffmpeg.py
+CMD ["/bin/sh", "entrypoint.sh"]
 

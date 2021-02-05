@@ -50,8 +50,9 @@ def process_stream(meeting_id, ending_time, api_token):
     print(api_token)
     print("in function!!")
     send_caption("NOW STARTING LIVE CAPTIONING SERVICE https://github.com/aalsabag/LiveCaption", api_token, seq, "en-US")
-    f = open('/mnt/streaming-{0}'.format(meeting_id,'rb'))
-    currentByteSize = os.path.getsize('/mnt/streaming-{0}'.format(meeting_id))
+    stream_file = '/mnt/streaming-{0}'.format(meeting_id)
+    f = open(stream_file, 'rb')
+    currentByteSize = os.path.getsize(stream_file)
     f.read(currentByteSize-4000)
 
     while time.time() < ending_time:
@@ -64,6 +65,8 @@ def process_stream(meeting_id, ending_time, api_token):
             print(res['text'])
             send_caption(res['text'], api_token, seq, "en-US")
             seq = seq + 1
+    if os.path.exists(stream_file):
+        os.remove(stream_file)
 
 def send_caption(caption_string, api_token, seq, language):
     # url = "https://wmcc.zoom.us/closedcaption?id=89888325091&ns=QWhtZWQgQWxzYWJhZydzIFpvb20gTWVldGluZw&expire=86400&sparams=id%2Cns%2Cexpire&signature=ERaP06oLJrDZ17ZqUYh-gMZ42BWWJbkHLgiQa91Dbn0.AG._6Hj1896SpaP-fgqIyiUQ9tEP0AP7D_yYaa-MoIEJTtSHFHCzzmIudK2TtJtvPfYBiWDmr5KflSKcTB2i-7Ptft-BA5nbtd0iD8vf_WVvixjVpG53JZK.Q_HKB5JprjvdI7IZWrSz4w.7OGeAndgnfYgGanm&seq=9&lang=en-US"
