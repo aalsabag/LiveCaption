@@ -1,22 +1,20 @@
 import logo from './logo.svg';
 import './App.css';
+import FullForm from './components/FullForm'
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <div class="typingEffect">
+          <h3>Zoom Live Captioning.</h3>
+      </div>
+        <FullForm></FullForm>
+        <div id="message">
+          <font face = "WildWest" size = "5">
+            This tool is and always will be a FREE, open-source service designed to serve the needs of those with difficulty hearing.
+          </font>
+        </div>
       </header>
     </div>
   );

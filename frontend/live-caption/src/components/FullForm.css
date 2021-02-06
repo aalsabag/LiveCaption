@@ -1,0 +1,88 @@
+.form {
+    position: absolute;
+}
+
+select option:not(:disabled) { color: gray }
+
+select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: gray;
+    
+}
+select option:disabled {
+    color: gray
+}
+
+
+input[type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+button {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.popup {
+    width: 90%;
+    height:75%;
+    background-color: lightblue; 
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.modal {
+    font-size: 12px;
+    color: white;
+    background-color: rgb(18, 62, 77);
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 5%;
+    margin-top: 10px;
+    vertical-align:auto;
+  }
+  .modal > .header {
+    width: 100%;
+    border-bottom: 1px solid gray;
+    font-size: 18px;
+    text-align: center;
+    padding: 5px;
+    position: center;
+  }
+  .modal > .content {
+    color: white;
+    width: 100%;
+    padding: 5px 5px;
+    text-align: center;
+  }
+
+#code {
+    background-color: black;
+}
