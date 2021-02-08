@@ -67,9 +67,10 @@ img {
     margin-bottom: 5%;
     margin-top: 10px;
     vertical-align:auto;
+    max-height: 90vh;
   }
   .modal > .header {
-    width: 100%;
+    max-width: 100%;
     border-bottom: 1px solid gray;
     font-size: 18px;
     text-align: center;
@@ -78,11 +79,26 @@ img {
   }
   .modal > .content {
     color: white;
-    width: 100%;
+    max-width: 100%;
     padding: 5px 5px;
     text-align: center;
   }
 
 #code {
     background-color: black;
+}
+
+#feedback {
+    color: red
+}
+
+.hide {
+  display: none;
+  font-size: small;
+}
+
+#api_token:hover + .hide {
+    display: block;
+    color: lightseagreen;
+
 }

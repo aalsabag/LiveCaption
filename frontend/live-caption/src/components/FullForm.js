@@ -10,7 +10,7 @@ export default class FullForm extends Component {
     
     constructor(props) {
         super(props)
-
+        this.getResults = this.getResults.bind(this);
 
         this.state = {
             meeting_id : '',
@@ -24,18 +24,30 @@ export default class FullForm extends Component {
         this.resultList = "hello"
     }
 
-    // Makes API call to fetch bacteria results
+
     getResults() {
-        var searchParams = new URLSearchParams(this.currentSelected)
+      var captionButton = document.getElementById("finalButton")
+      captionButton.style.backgroundColor = "yellow";
+      captionButton.innerHTML = "Loading...";
+      var formData = new FormData()
+      formData.append('api_token', this.state.api_token)
+      formData.append('meeting_id', this.state.meeting_id)
+      formData.append('meeting_length', this.state.meeting_length)
 
-        var requestOptions = {
-            method: 'GET',
-            redirect: 'follow'
-          };
+      var requestOptions = {
+          method: 'POST',
+          redirect: 'follow',
+          body: formData
+        };
 
-        fetch(this.url + "health").then(response => response.json()).then(json=>{
-            console.log("Making an API call")
-          })
+      // fetch(this.url + "health", requestOptions).then(response => response.json()).then(json=>{
+      //     console.log("Making an API call")
+      //   })
+      fetch(this.url + "process", requestOptions).then(function(response){
+        captionButton.style.backgroundColor = "blue";
+        captionButton.innerHTML = "Captioning Started!!!";
+        console.log("captioning started")
+      })
     }
 
 
@@ -44,6 +56,13 @@ export default class FullForm extends Component {
           <div id="full-section">
             <Formik id="full-form"
             initialValues={{ meeting_id: '', api_token: '', meeting_length:'' }}
+            validate={values => {
+              const errors = {};
+              if (values.meeting_id.includes(' ')){
+                errors.meeting_id = "No spaces in the meeting id"
+              }
+              return errors;
+            }}
             onSubmit={(values, actions) => {
                 setTimeout(() => {
                 this.state.meeting_id = values.meeting_id
@@ -66,6 +85,7 @@ export default class FullForm extends Component {
                     placeholder="Zoom Meeting ID"
                 />
                 <Field
+                    id="api_token"
                     type="text"
                     onChange={props.handleChange}
                     onBlur={props.handleBlur}
@@ -73,6 +93,7 @@ export default class FullForm extends Component {
                     name="api_token"
                     placeholder="CC API Token"
                 />
+                <div class="hide">This can be found at the bottom of the meeting. Click "Closed Caption" at the bottom of the meeting and then click "Copy the API Token"</div>
                 <Field
                     id="select_field" 
                     as="select"
@@ -91,7 +112,7 @@ export default class FullForm extends Component {
                 </Field>
 
 
-                {props.errors.name && <div id="feedback">{props.errors.name}</div>}
+                {props.errors.meeting_id && <div id="feedback">{props.errors.meeting_id}</div>}
                 
                 <Popup trigger={<button type="submit">Submit</button>} position="top center">
                   <div className="modal">
@@ -102,7 +123,7 @@ export default class FullForm extends Component {
                       <br />
                       <img src={startLiveStream} alt="Start the live stream" width="77%" height="22%"></img>
                           <br />
-                          <i>a. If you don't see this button you must enable it by going to https://zoom.us/signin -> Settings -> In Meeting (Advanced) -> Allow livestreaming of meetings -> Custom Live Streaming service</i>
+                          <i>a. If you don't see this button you must enable it by going to https://zoom.us/signin → Settings → In Meeting (Advanced) → Allow livestreaming of meetings → Custom Live Streaming service</i>
                           <br />
                           <img src={settingsEnableLiveStream} alt="Go to settings" width="40%" height="10%"></img>
                           <img src={enableLiveStream} alt="Enable live stream" width="40%" height="10%"></img>
@@ -121,7 +142,7 @@ export default class FullForm extends Component {
                       <br />
                       <strong><font size="5">3. Once complete press the button below!!!!</font></strong>
                       <br />
-                      <button type="submit" action={this.getResults()}>Start Captioning!</button>
+                      <button id="finalButton" type="submit" onClick={this.getResults}>Start Captioning!</button>
                     </div>
                   </div>
 

@@ -17,6 +17,7 @@
     "start": "react-scripts start",
     "start-prod": "REACT_APP_BACKEND_URL=https://livecaption-backend.alsabagtech.com react-scripts start",
     "build": "react-scripts build",
+    "build-prod": "REACT_APP_BACKEND_URL=https://livecaption-backend.alsabagtech.com react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
