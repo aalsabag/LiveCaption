@@ -8,8 +8,12 @@ import requests
 import json
 from flask import Flask, request
 import threading
+from flask_cors import CORS
 app = Flask(__name__)
 
+# cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+# TODO stricter implementation of CORS origins
+CORS(app)
 SetLogLevel(0)
 #ffmpeg -f flv -listen 1 -i rtmp://localhost:1935/live/app -c copy -f flv -listen 1 rtmp://localhost:1936/live/app
 

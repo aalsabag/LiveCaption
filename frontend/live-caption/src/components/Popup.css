@@ -1,0 +1,49 @@
+.modal {
+    position: fixed;
+    max-width: 80%;
+    max-height: 80%;
+    right: 10%;
+    left: 10%;
+    top: 10%;
+    bottom: 10%;
+    margin: auto;
+    font-size: 12px;
+    color: white;
+    background-color: rgb(18, 62, 77);
+  }
+
+
+img {
+    max-width: 90%;
+    max-height: 22vh;
+    padding: 5px 5px;
+    object-fit: cover;
+}
+
+.modal > .header {
+    max-width: 100%;
+    border-bottom: 1px solid gray;
+    font-size: 18px;
+    text-align: center;
+    padding: 5px;
+    position: center;
+    max-height: 10vh;
+}
+.modal > .content {
+    color: white;
+    max-width: 100%;
+    padding: 5px 5px;
+    text-align: center;
+    max-height: 70vh;
+    overflow: auto;
+}
+.content {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#finalButton {
+    bottom: 0;
+    right:0;
+    
+}

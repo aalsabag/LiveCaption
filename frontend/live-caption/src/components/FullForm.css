@@ -51,45 +51,13 @@ button:hover {
     background-color: lightblue; 
 }
 
-img {
-    max-width: 100%;
-    max-height: 100%;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
-.modal {
-    font-size: 12px;
-    color: white;
-    background-color: rgb(18, 62, 77);
-    margin-left: 5%;
-    margin-right: 5%;
-    margin-bottom: 5%;
-    margin-top: 10px;
-    vertical-align:auto;
-    max-height: 90vh;
-  }
-  .modal > .header {
-    max-width: 100%;
-    border-bottom: 1px solid gray;
-    font-size: 18px;
-    text-align: center;
-    padding: 5px;
-    position: center;
-  }
-  .modal > .content {
-    color: white;
-    max-width: 100%;
-    padding: 5px 5px;
-    text-align: center;
-  }
-
 #code {
     background-color: black;
 }
 
 #feedback {
-    color: red
+    color: red;
+    font-size: medium;
 }
 
 .hide {
@@ -102,3 +70,4 @@ img {
     color: lightseagreen;
 
 }
+
